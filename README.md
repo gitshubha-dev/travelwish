@@ -1,5 +1,8 @@
 # TravelWish — Travel Bucket List App
 
+
+http://travelwish-alb-1705137418.us-west-2.elb.amazonaws.com/
+
 A full-stack travel bucket list web application built on traditional server-based AWS infrastructure, designed from scratch. Built as a cloud engineering portfolio project.
 
 ## Architecture
