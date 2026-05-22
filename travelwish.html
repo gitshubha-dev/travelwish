@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TravelWish</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar:     #257A8A;
+      --sidebar-d:   #1C6070;
+      --bg:          #FFFFFF;
+      --paper:       #F2F8F9;
+      --ink:         #0D2830;
+      --mid:         #285A65;
+      --muted:       #5A8A95;
+      --line:        #DAE8EB;
+      --gold:        #B8960C;
+      --gold-lt:     #F5EDD0;
+      --gold-bright: #DCBA50;
+      --teal:        #257A8A;
+      --teal-lt:     #E0F0F3;
+      --teal-dark:   #1A5C6A;
+      --fs: 'Cormorant', Georgia, serif;
+      --fb: 'Outfit', system-ui, sans-serif;
+    }
+
+    html, body { height:100%; font-family:var(--fb); font-weight:300; background:var(--bg); color:var(--ink); overflow:hidden; }
+
+    .app { display:grid; grid-template-columns:240px 1fr; height:100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -80px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      pointer-events: none;
+    }
+
+    .sidebar::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.07);
+      pointer-events: none;
+    }
+
+    .sb-logo-block {
+      padding: 2.25rem 2rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.13);
+      flex-shrink: 0;
+    }
+
+    .sb-logo-rule {
+      width: 28px;
+      height: 1.5px;
+      background: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .sb-wordmark {
+      font-family: var(--fs);
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 0.07em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .sb-tagline {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .sb-progress {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.13);
+      flex-shrink: 0;
+    }
+
+    .sb-prog-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .sb-prog-row span {
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .sb-prog-row strong {
+      font-family: var(--fs);
+      font-size: 15px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold-bright);
+    }
+
+    .sb-bar-bg {
+      height: 2px;
+      background: rgba(255,255,255,0.12);
+      position: relative;
+      border-radius: 1px;
+    }
+
+    .sb-bar-fill {
+      position: absolute;
+      top:0; left:0;
+      height: 100%;
+      background: var(--gold);
+      transition: width 0.5s ease;
+      border-radius: 1px;
+    }
+
+    .nav { padding: 1.25rem 0; flex: 1; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 2rem;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-icon { font-size: 12px; width:14px; text-align:center; flex-shrink:0; opacity:0.7; }
+    .nav-item:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
+    .nav-item.active {
+      color: var(--gold-bright);
+      background: rgba(184,150,12,0.15);
+      border-left: 2px solid var(--gold);
+      padding-left: calc(2rem - 2px);
+    }
+
+    .nav-item.active .nav-icon { opacity: 1; }
+
+    .sb-add {
+      margin: 0 2rem 2rem;
+      font-family: var(--fb);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sidebar);
+      background: var(--gold-bright);
+      border: none;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sb-add:hover { background: var(--gold); color: #fff; }
+
+    /* ── PANELS ── */
+    .panel { display:none; flex-direction:column; height:100vh; overflow:hidden; background:var(--bg); }
+    .panel.active { display:flex; }
+
+    .masthead {
+      flex-shrink: 0;
+      padding: 2.5rem 3.5rem 0;
+      background: var(--bg);
+    }
+
+    .mh-eyebrow {
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+      margin-bottom: 8px;
+    }
+
+    .mh-title {
+      font-family: var(--fs);
+      font-size: 44px;
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    .mh-title em { font-style: italic; color: var(--sidebar); }
+
+    .filter-bar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3.5rem;
+      border-bottom: 1px solid var(--line);
+      margin-top: 1.5rem;
+      background: var(--bg);
+    }
+
+    .filter-tabs { display:flex; gap:0; }
+
+    .filter-tab {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      padding: 10px 14px 12px;
+      cursor: pointer;
+      transition: color 0.13s;
+      white-space: nowrap;
+    }
+
+    .filter-tab:first-child { padding-left: 0; }
+    .filter-tab:hover { color: var(--mid); }
+    .filter-tab.active { color: var(--ink); border-bottom-color: var(--gold); }
+
+    .mh-count {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .panel-body {
+      flex:1;
+      overflow-y: auto;
+      padding: 0 3.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+
+    .panel-body::-webkit-scrollbar { width:3px; }
+    .panel-body::-webkit-scrollbar-thumb { background:var(--line); }
+
+    /* ── destination rows ── */
+    .dest-list { display:flex; flex-direction:column; }
+
+    .dest-row {
+      display: grid;
+      grid-template-columns: 1fr 80px 96px 120px 26px;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.125rem 0;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: background 0.12s, padding 0.12s;
+    }
+
+    .dest-row:first-child { border-top: 1px solid var(--line); }
+
+    .dest-row:hover {
+      background: var(--paper);
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin: 0 -1rem;
+    }
+
+    .dest-row.done .dest-name    { color: var(--muted); }
+    .dest-row.done .dest-country { color: rgba(180,200,200,0.8); }
+
+    .dest-name {
+      font-family: var(--fs);
+      font-size: 21px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .dest-country {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .dest-cat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      justify-content: flex-end;
+    }
+
+    .dest-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+
+    .dest-pri {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: 2px;
+      text-align: center;
+    }
+
+    .p-high   { background: rgba(184,150,12,0.11);  color: #7A6000; }
+    .p-medium { background: rgba(74,130,152,0.12);  color: var(--teal-dark); }
+    .p-low    { background: rgba(28,48,64,0.07);    color: var(--mid); }
+
+    .dest-time {
+      font-size: 11px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .row-check {
+      width: 22px; height: 22px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: none;
+      cursor: pointer;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .row-check:hover { border-color: var(--gold); color: var(--gold); }
+    .row-check.checked { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+    /* ── loading / error states ── */
+    .loading-state {
+      padding: 5rem 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+      font-family: var(--fs);
+    }
+
+    .error-state {
+      padding: 3rem 0;
+      text-align: center;
+      color: #7A1818;
+      font-size: 12px;
+      background: #FFF0F0;
+      border: 1px solid #FECACA;
+      border-radius: 4px;
+      margin-top: 2rem;
+    }
+
+    /* ── ADD PANEL ── */
+    .add-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .add-form-col {
+      padding: 2.5rem 3.5rem;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+    }
+
+    .add-aside {
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .add-aside-wm {
+      position: absolute;
+      top: 30px; right: -15px;
+      font-family: var(--fs);
+      font-size: 130px;
+      font-weight: 600;
+      font-style: italic;
+      color: rgba(255,255,255,0.07);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .add-aside-label {
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .add-aside-title {
+      font-family: var(--fs);
+      font-size: 44px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.1;
+      color: rgba(255,255,255,0.88);
+      position: relative;
+    }
+
+    .add-aside-rule {
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .add-aside-sub {
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.45);
+      max-width: 200px;
+      position: relative;
+    }
+
+    .form-field { margin-bottom: 2rem; }
+
+    .form-label {
+      display: block;
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      font-family: var(--fb);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      padding: 8px 0;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-bottom-color: var(--teal-dark); }
+    .form-input::placeholder, .form-textarea::placeholder { color: #CFC8BC; font-style: italic; }
+    .form-textarea { resize: none; height: 52px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+
+    .seg-group { display:flex; border:1px solid var(--line); overflow:hidden; }
+
+    .seg-btn {
+      flex:1;
+      font-family: var(--fb);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-right: 1px solid var(--line);
+      padding: 10px 4px;
+      cursor: pointer;
+      transition: all 0.13s;
+    }
+
+    .seg-btn:last-child { border-right:none; }
+    .seg-btn:hover { background: var(--teal-lt); color: var(--teal-dark); }
+    .seg-btn.active { background: var(--sidebar); color: var(--gold-bright); }
+
+    .cat-chips { display:flex; gap:6px; flex-wrap:wrap; }
+
+    .cat-chip {
+      font-family: var(--fb);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 7px 12px;
+      cursor: pointer;
+      transition: all 0.13s;
+    }
+
+    .cat-chip:hover { border-color: var(--teal-dark); color: var(--teal-dark); }
+    .cat-chip.active { background: var(--sidebar); border-color: var(--sidebar); color: var(--gold-bright); }
+
+    .submit-btn {
+      font-family: var(--fb);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sidebar);
+      background: var(--gold-bright);
+      border: none;
+      padding: 14px 28px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .submit-btn:hover { background: var(--gold); color: #fff; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── DETAIL OVERLAY ── */
+    .detail-overlay {
+      display: none;
+      position: fixed;
+      inset: 0 0 0 240px;
+      background: var(--bg);
+      z-index: 50;
+      flex-direction: column;
+      animation: slideIn 0.2s ease;
+    }
+
+    .detail-overlay.open { display:flex; }
+
+    @keyframes slideIn {
+      from { opacity:0; transform:translateX(16px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+
+    .detail-topbar {
+      flex-shrink: 0;
+      padding: 1.75rem 3.5rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .d-back {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0;
+      transition: color 0.13s;
+    }
+
+    .d-back:hover { color: var(--ink); }
+
+    .d-actions { display:flex; gap:8px; }
+
+    .d-btn {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 9px 18px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--mid);
+      cursor: pointer;
+      transition: all 0.13s;
+    }
+
+    .d-btn:hover        { border-color: var(--sidebar); color: var(--sidebar); }
+    .d-btn.vis          { background: var(--sidebar); border-color: var(--sidebar); color: var(--gold-bright); font-weight: 500; }
+    .d-btn.vis:hover    { background: var(--sidebar-d); }
+    .d-btn.del:hover    { border-color: #7A1818; color: #7A1818; }
+
+    .detail-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      overflow: hidden;
+    }
+
+    .detail-main {
+      padding: 3rem 3.5rem;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+    }
+
+    .detail-side {
+      background: var(--sidebar);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .detail-side-wm {
+      position: absolute;
+      bottom: -10px; right: -15px;
+      font-family: var(--fs);
+      font-size: 150px;
+      font-weight: 600;
+      font-style: italic;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .d-eyebrow {
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    .d-title {
+      font-family: var(--fs);
+      font-size: 64px;
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -1px;
+      color: var(--ink);
+    }
+
+    .d-country {
+      font-family: var(--fs);
+      font-size: 22px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .d-gold-rule {
+      width: 40px;
+      height: 1.5px;
+      background: var(--gold);
+      margin: 1.75rem 0;
+    }
+
+    .d-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.75rem 1.5rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .d-meta-lbl {
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .d-meta-val {
+      font-family: var(--fs);
+      font-size: 19px;
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .d-note-block { border-top: 1px solid var(--line); padding-top: 1.75rem; }
+
+    .d-note-text {
+      font-family: var(--fs);
+      font-size: 20px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.8;
+      color: var(--mid);
+    }
+
+    .d-side-num {
+      font-family: var(--fs);
+      font-size: 90px;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--gold-bright);
+      line-height: 1;
+      letter-spacing: -3px;
+      position: relative;
+    }
+
+    .d-side-num-lbl {
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      margin-top: 4px;
+      position: relative;
+    }
+
+    .d-side-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .d-side-dest {
+      font-family: var(--fs);
+      font-size: 30px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.2;
+      position: relative;
+    }
+
+    .d-side-country {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      margin-top: 6px;
+      position: relative;
+    }
+
+    .empty-state { padding:5rem 0; text-align:center; }
+    .empty-title { font-family:var(--fs); font-size:28px; font-weight:300; font-style:italic; color:var(--muted); margin-bottom:8px; }
+    .empty-sub { font-size:10px; font-weight:400; letter-spacing:0.1em; color:var(--line); text-transform:uppercase; }
+  
+    @media (max-width: 768px) {
+      .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+
+      .sidebar {
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 1rem;
+        gap: 0.5rem;
+      }
+
+      .sb-logo-block { padding: 0.5rem 0.75rem; border-bottom: none; border-right: 1px solid rgba(255,255,255,0.13); }
+      .sb-wordmark { font-size: 20px; }
+      .sb-tagline { display: none; }
+      .sb-logo-rule { display: none; }
+      .sb-progress { padding: 0.5rem 0.75rem; border-bottom: none; }
+      .sb-prog-row span { font-size: 7px; }
+
+      .nav {
+        display: flex;
+        flex-direction: row;
+        padding: 0;
+        flex: unset;
+        width: 100%;
+        border-top: 1px solid rgba(255,255,255,0.13);
+      }
+
+      .nav-item {
+        flex: 1;
+        justify-content: center;
+        padding: 0.6rem 0.25rem;
+        font-size: 9px;
+        letter-spacing: 0.06em;
+        border-left: none;
+        border-top: 2px solid transparent;
+      }
+
+      .nav-item.active {
+        border-left: none;
+        border-top: 2px solid var(--gold);
+        padding-left: 0.25rem;
+      }
+
+      .nav-icon { display: none; }
+
+      .sb-add { margin: 0.5rem 1rem; width: calc(100% - 2rem); justify-content: center; }
+
+      .panel { height: auto; min-height: 0; }
+      .app { height: 100vh; overflow: hidden; }
+
+      .masthead { padding: 1.25rem 1.25rem 0; }
+      .mh-title { font-size: 28px; }
+
+      .filter-bar { padding: 0 1.25rem; overflow-x: auto; }
+      .filter-tabs { gap: 0; }
+      .filter-tab { padding: 8px 10px 10px; font-size: 9px; }
+
+      .panel-body { padding: 0 1.25rem; }
+
+      .dest-row {
+        grid-template-columns: 1fr auto auto;
+        gap: 0.5rem;
+      }
+
+      .dest-cat { display: none; }
+      .dest-time { display: none; }
+      .dest-name { font-size: 17px; }
+
+      .add-layout { grid-template-columns: 1fr; }
+      .add-aside { display: none; }
+      .add-form-col { padding: 1.25rem; }
+
+      .detail-overlay { inset: 0; }
+      .detail-body { grid-template-columns: 1fr; }
+      .detail-side { display: none; }
+      .detail-main { padding: 1.5rem 1.25rem; }
+      .d-title { font-size: 40px; }
+      .detail-topbar { padding: 1rem 1.25rem; }
+    }
+  
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <nav class="sidebar">
+    <div class="sb-logo-block">
+      <div class="sb-logo-rule"></div>
+      <div class="sb-wordmark">TravelWish</div>
+      <div class="sb-tagline">Travel bucket list</div>
+    </div>
+
+    <div class="sb-progress">
+      <div class="sb-prog-row">
+        <span>Progress</span>
+        <strong id="sb-pct">0%</strong>
+      </div>
+      <div class="sb-bar-bg"><div class="sb-bar-fill" id="sb-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-item active" onclick="showPanel('list',this)"><span class="nav-icon">◈</span> All destinations</button>
+      <button class="nav-item" onclick="showPanel('visited',this)"><span class="nav-icon">✓</span> Visited</button>
+      <button class="nav-item" onclick="showPanel('wishlist',this)"><span class="nav-icon">◇</span> Wish list</button>
+    </div>
+
+    <button class="sb-add" onclick="showPanel('add',null)">
+      <span>+ Add destination</span>
+      <span>→</span>
+    </button>
+  </nav>
+
+  <!-- LIST -->
+  <div class="panel active" id="panel-list">
+    <div class="masthead">
+      <div class="mh-eyebrow">TravelWish</div>
+      <h1 class="mh-title">All <em>destinations</em></h1>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-tab" onclick="setFilter('high',this)">Priority</button>
+        <button class="filter-tab" onclick="setFilter('city',this)">City</button>
+        <button class="filter-tab" onclick="setFilter('nature',this)">Nature</button>
+        <button class="filter-tab" onclick="setFilter('beach',this)">Beach</button>
+        <button class="filter-tab" onclick="setFilter('adventure',this)">Adventure</button>
+        <button class="filter-tab" onclick="setFilter('culture',this)">Culture</button>
+      </div>
+      <div class="mh-count" id="list-count"></div>
+    </div>
+    <div class="panel-body" style="padding-top:0">
+      <div id="list-loading" class="loading-state">Loading destinations…</div>
+      <div class="dest-list" id="list-rows"></div>
+      <div class="empty-state" id="list-empty" style="display:none">
+        <div class="empty-title">Nothing here yet.</div>
+        <div class="empty-sub">Add a destination to begin</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISITED -->
+  <div class="panel" id="panel-visited">
+    <div class="masthead">
+      <div class="mh-eyebrow">Visited</div>
+      <h1 class="mh-title">Places <em>explored</em></h1>
+    </div>
+    <div class="filter-bar" style="justify-content:flex-end;">
+      <div class="mh-count">Every stamp in your passport.</div>
+    </div>
+    <div class="panel-body" style="padding-top:0">
+      <div class="dest-list" id="visited-rows"></div>
+      <div class="empty-state" id="visited-empty" style="display:none">
+        <div class="empty-title">No places visited yet.</div>
+        <div class="empty-sub">Mark destinations as visited to see them here</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WISHLIST -->
+  <div class="panel" id="panel-wishlist">
+    <div class="masthead">
+      <div class="mh-eyebrow">Wish list</div>
+      <h1 class="mh-title">Still <em>dreaming</em></h1>
+    </div>
+    <div class="filter-bar" style="justify-content:flex-end;">
+      <div class="mh-count">The places calling your name.</div>
+    </div>
+    <div class="panel-body" style="padding-top:0">
+      <div class="dest-list" id="wishlist-rows"></div>
+      <div class="empty-state" id="wishlist-empty" style="display:none">
+        <div class="empty-title">Your wish list is empty.</div>
+        <div class="empty-sub">Add a dream destination</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD -->
+  <div class="panel" id="panel-add">
+    <div class="masthead">
+      <div class="mh-eyebrow">New destination</div>
+      <h1 class="mh-title">Where to <em>next?</em></h1>
+    </div>
+    <div class="filter-bar"></div>
+    <div class="panel-body" style="padding:0; overflow:hidden;">
+      <div class="add-layout">
+        <div class="add-form-col">
+          <div class="form-field">
+            <label class="form-label">Destination</label>
+            <input type="text" class="form-input" id="f-name" placeholder="Kyoto" autocomplete="off" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Country / Region</label>
+            <input type="text" class="form-input" id="f-country" placeholder="Japan" autocomplete="off" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Category</label>
+            <div class="cat-chips" id="cat-seg">
+              <button class="cat-chip active" data-val="city"      onclick="selectCat(this)">City</button>
+              <button class="cat-chip"        data-val="nature"    onclick="selectCat(this)">Nature</button>
+              <button class="cat-chip"        data-val="beach"     onclick="selectCat(this)">Beach</button>
+              <button class="cat-chip"        data-val="adventure" onclick="selectCat(this)">Adventure</button>
+              <button class="cat-chip"        data-val="culture"   onclick="selectCat(this)">Culture</button>
+              <button class="cat-chip"        data-val="other"     onclick="selectCat(this)">Other</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Priority</label>
+              <div class="seg-group" id="priority-seg">
+                <button class="seg-btn"        data-val="high"   onclick="selectPri(this)">High</button>
+                <button class="seg-btn active" data-val="medium" onclick="selectPri(this)">Medium</button>
+                <button class="seg-btn"        data-val="low"    onclick="selectPri(this)">Low</button>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Best time to visit</label>
+              <input type="text" class="form-input" id="f-time" placeholder="Spring / Oct – Nov" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Why I want to go</label>
+            <textarea class="form-textarea form-input" id="f-note" placeholder="Notes, must-sees, feelings…"></textarea>
+          </div>
+          <button class="submit-btn" id="submit-btn" onclick="addDest()">Add to list →</button>
+          <div id="form-error" class="error-state" style="display:none"></div>
+        </div>
+        <div class="add-aside">
+          <div class="add-aside-wm">Go</div>
+          <div class="add-aside-label">Your next adventure</div>
+          <div class="add-aside-title">Every journey begins with a single destination.</div>
+          <div class="add-aside-rule"></div>
+          <div class="add-aside-sub">Add destinations you dream about. Track the ones you conquer. Build your life's map.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL OVERLAY -->
+  <div class="detail-overlay" id="detail-overlay">
+    <div class="detail-topbar">
+      <button class="d-back" onclick="closeDetail()">← Back</button>
+      <div class="d-actions">
+        <button class="d-btn vis" id="d-visit-btn" onclick="detailToggle()">Mark visited</button>
+        <button class="d-btn del" onclick="detailDelete()">Remove</button>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-main">
+        <div class="d-eyebrow" id="d-cat"></div>
+        <div class="d-title"   id="d-name"></div>
+        <div class="d-country" id="d-country"></div>
+        <div class="d-gold-rule"></div>
+        <div class="d-meta-grid">
+          <div><div class="d-meta-lbl">Priority</div><div class="d-meta-val" id="d-pri"></div></div>
+          <div><div class="d-meta-lbl">Best time</div><div class="d-meta-val" id="d-time"></div></div>
+          <div><div class="d-meta-lbl">Status</div><div class="d-meta-val" id="d-status"></div></div>
+        </div>
+        <div id="d-note-block" style="display:none" class="d-note-block">
+          <div class="d-meta-lbl" style="margin-bottom:0.875rem">Notes</div>
+          <div class="d-note-text" id="d-note"></div>
+        </div>
+      </div>
+      <div class="detail-side">
+        <div class="detail-side-wm" id="d-wm"></div>
+        <div class="d-side-num"     id="d-rank">#1</div>
+        <div class="d-side-num-lbl">On your list</div>
+        <div class="d-side-divider"></div>
+        <div class="d-side-dest"    id="d-side-name"></div>
+        <div class="d-side-country" id="d-side-country"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Replace with your ALB DNS name ──
+  const API = 'http://34.219.182.115:5000';
+
+  const CCOLORS = { city:'#7EAAB8', nature:'#5A9070', beach:'#4A8298', adventure:'#B87040', culture:'#B8960C', other:'#8A9AA8' };
+  const CLABELS = { city:'City break', nature:'Nature & hiking', beach:'Beach & coast', adventure:'Adventure', culture:'Culture & heritage', other:'Other' };
+  const PLABELS = { high:'High priority', medium:'Medium', low:'Low priority' };
+  const PORD    = { high:0, medium:1, low:2 };
+
+  let dests = [];
+  let listFilter = 'all', detailId = null, selCat = 'city', selPri = 'medium';
+
+  // ── API calls ──
+  async function fetchDests() {
+    const r = await fetch(API + '/destinations');
+    if (!r.ok) throw new Error('Failed to fetch');
+    return await r.json();
+  }
+
+  async function postDest(data) {
+    const r = await fetch(API + '/destinations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) throw new Error('Failed to add');
+    return await r.json();
+  }
+
+  async function putDest(id, data) {
+    const r = await fetch(API + '/destinations/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) throw new Error('Failed to update');
+    return await r.json();
+  }
+
+  async function deleteDest(id) {
+    const r = await fetch(API + '/destinations/' + id, { method: 'DELETE' });
+    if (!r.ok) throw new Error('Failed to delete');
+    return await r.json();
+  }
+
+  // ── load all destinations from API ──
+  async function loadDests() {
+    try {
+      dests = await fetchDests();
+      document.getElementById('list-loading').style.display = 'none';
+      render();
+    } catch(e) {
+      document.getElementById('list-loading').textContent = 'Could not connect to API. Check your connection.';
+    }
+  }
+
+  // ── nav ──
+  function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    if (btn && btn.classList && btn.classList.contains('nav-item')) btn.classList.add('active');
+    render();
+  }
+
+  function selectCat(btn) {
+    document.querySelectorAll('#cat-seg .cat-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); selCat = btn.dataset.val;
+  }
+
+  function selectPri(btn) {
+    document.querySelectorAll('#priority-seg .seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); selPri = btn.dataset.val;
+  }
+
+  // ── add destination ──
+  async function addDest() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { document.getElementById('f-name').focus(); return; }
+    const btn = document.getElementById('submit-btn');
+    const err = document.getElementById('form-error');
+    btn.disabled = true;
+    btn.textContent = 'Adding…';
+    err.style.display = 'none';
+    try {
+      await postDest({
+        name,
+        country:  document.getElementById('f-country').value.trim(),
+        category: selCat,
+        priority: selPri,
+        time:     document.getElementById('f-time').value.trim(),
+        note:     document.getElementById('f-note').value.trim()
+      });
+      ['f-name','f-country','f-time','f-note'].forEach(id => document.getElementById(id).value = '');
+      await loadDests();
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('panel-list').classList.add('active');
+      document.querySelector('.nav-item').classList.add('active');
+    } catch(e) {
+      err.style.display = 'block';
+      err.textContent = 'Could not save destination. Please try again.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Add to list →';
+    }
+  }
+
+  function setFilter(f, btn) {
+    listFilter = f;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); renderList();
+  }
+
+  // ── rows ──
+  function makeRow(d) {
+    const el = document.createElement('div');
+    const done = d.visited == 1 || d.visited === true;
+    el.className = 'dest-row' + (done ? ' done' : '');
+    el.innerHTML =
+      '<div style="min-width:0">' +
+        '<div class="dest-name">' + d.name + '</div>' +
+        (d.country ? '<div class="dest-country">' + d.country + '</div>' : '') +
+      '</div>' +
+      '<div class="dest-cat"><span class="dest-dot" style="background:' + (CCOLORS[d.category]||'#888') + '"></span>' + (CLABELS[d.category]||d.category||'') + '</div>' +
+      '<span class="dest-pri p-' + d.priority + '">' + d.priority + '</span>' +
+      '<div class="dest-time">' + (d.best_time || '') + '</div>' +
+      '<button class="row-check' + (done ? ' checked' : '') + '" onclick="event.stopPropagation();quickToggle(' + d.id + ',' + (done?'true':'false') + ')" title="Toggle visited">✓</button>';
+    el.addEventListener('click', () => openDetail(d.id));
+    return el;
+  }
+
+  function renderRows(list, rowsId, emptyId) {
+    const c = document.getElementById(rowsId), e = document.getElementById(emptyId);
+    c.innerHTML = '';
+    if (!list.length) { e.style.display = 'block'; return; }
+    e.style.display = 'none';
+    list.forEach(d => c.appendChild(makeRow(d)));
+  }
+
+  function renderList() {
+    let f = [...dests];
+    if (listFilter === 'high') f = f.filter(d => d.priority === 'high');
+    else if (['city','nature','beach','adventure','culture'].includes(listFilter)) f = f.filter(d => d.category === listFilter);
+    f.sort((a,b) => (PORD[a.priority]||1) - (PORD[b.priority]||1) || a.name.localeCompare(b.name));
+    renderRows(f, 'list-rows', 'list-empty');
+    const c = document.getElementById('list-count');
+    if (c) c.textContent = f.length + ' destination' + (f.length !== 1 ? 's' : '');
+  }
+
+  async function quickToggle(id, currentlyDone) {
+    try {
+      await putDest(id, { visited: !currentlyDone });
+      await loadDests();
+    } catch(e) { alert('Could not update destination.'); }
+  }
+
+  function openDetail(id) {
+    const d = dests.find(x => x.id === id); if (!d) return;
+    detailId = id;
+    const done = d.visited == 1 || d.visited === true;
+    const rank = dests.filter(x => !(x.visited==1||x.visited===true)).sort((a,b) => (PORD[a.priority]||1)-(PORD[b.priority]||1)).findIndex(x => x.id === id) + 1;
+    document.getElementById('d-cat').textContent        = CLABELS[d.category] || d.category || '';
+    document.getElementById('d-name').textContent       = d.name;
+    document.getElementById('d-country').textContent    = d.country || '—';
+    document.getElementById('d-pri').textContent        = PLABELS[d.priority] || d.priority;
+    document.getElementById('d-time').textContent       = d.best_time || '—';
+    document.getElementById('d-status').textContent     = done ? 'Visited ✓' : 'On the list';
+    document.getElementById('d-rank').textContent       = done ? '✓' : (rank > 0 ? '#' + rank : '—');
+    document.getElementById('d-wm').textContent         = d.name.charAt(0);
+    document.getElementById('d-side-name').textContent  = d.name;
+    document.getElementById('d-side-country').textContent = d.country || '';
+    const vBtn = document.getElementById('d-visit-btn');
+    if (done) { vBtn.textContent = 'Mark unvisited'; vBtn.classList.remove('vis'); }
+    else      { vBtn.textContent = 'Mark visited';   vBtn.classList.add('vis'); }
+    const nb = document.getElementById('d-note-block');
+    if (d.notes) { nb.style.display = 'block'; document.getElementById('d-note').textContent = d.notes; }
+    else         { nb.style.display = 'none'; }
+    document.getElementById('detail-overlay').classList.add('open');
+  }
+
+  function closeDetail() { document.getElementById('detail-overlay').classList.remove('open'); detailId = null; }
+
+  async function detailToggle() {
+    const d = dests.find(x => x.id === detailId); if (!d) return;
+    const done = d.visited == 1 || d.visited === true;
+    try {
+      await putDest(detailId, { visited: !done });
+      await loadDests();
+      openDetail(detailId);
+    } catch(e) { alert('Could not update destination.'); }
+  }
+
+  async function detailDelete() {
+    if (!confirm('Remove this destination?')) return;
+    try {
+      await deleteDest(detailId);
+      await loadDests();
+      closeDetail();
+    } catch(e) { alert('Could not delete destination.'); }
+  }
+
+  function render() {
+    const total = dests.length;
+    const done  = dests.filter(d => d.visited==1||d.visited===true).length;
+    const pct   = total ? Math.round((done/total)*100) : 0;
+    document.getElementById('sb-pct').textContent = pct + '%';
+    document.getElementById('sb-bar').style.width = pct + '%';
+    renderList();
+    renderRows(dests.filter(d => d.visited==1||d.visited===true).sort((a,b) => a.name.localeCompare(b.name)), 'visited-rows', 'visited-empty');
+    renderRows(dests.filter(d => !(d.visited==1||d.visited===true)).sort((a,b) => (PORD[a.priority]||1)-(PORD[b.priority]||1)||a.name.localeCompare(b.name)), 'wishlist-rows', 'wishlist-empty');
+  }
+
+  // ── boot ──
+  loadDests();
+</script>
+</body>
+</html>
